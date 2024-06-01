@@ -1,0 +1,10 @@
+uvicorn>=0.20.0,<0.30.0
+fastapi>=0.111.0,<1.0.0
+python-multipart>=0.0.5,<0.1.0
+pydantic>=2.3.0,<3.0.0
+pydantic-settings>=2.2.1,<2.3.0
+typing_extensions>=4.2.0,<5.0.0
+loguru>=0.5.3,<1.0.0
+# This is the custom model package mcp-binnary-classification-model. 
+git+https://github.com/mcollpol/BreastCancerPrediction.git@v0.0.1#egg=mcp-binnary-classification-model&subdirectory=production
+feature-engine>=1.0.2,<1.6.0  # breaking change in v1.6.0

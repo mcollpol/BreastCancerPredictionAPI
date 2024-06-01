@@ -1,0 +1,4 @@
+.tox
+.vs/
+venv/
+__pycache__
