@@ -7,7 +7,7 @@ Classes:
     LoggingSettings: Configuration settings for logging.
     Settings: Main settings configuration for the application.
     InterceptHandler: Custom logging handler to integrate with Loguru.
-    
+
 Functions:
     setup_app_logging(config: Settings): Configures application logging.
 """
@@ -15,38 +15,42 @@ Functions:
 import logging
 import sys
 from types import FrameType
-from typing import List, cast
+from typing import List, Union, cast
 
 from loguru import logger
-from pydantic import AnyHttpUrl
-from pydantic_settings import BaseSettings
+from pydantic import BaseSettings
+from pydantic.networks import AnyHttpUrl
 
 
 class LoggingSettings(BaseSettings):
     """
     Configuration settings for logging.
-    
+
     Attributes:
         LOGGING_LEVEL (int): The logging level. Default is logging.INFO.
     """
+
     LOGGING_LEVEL: int = logging.INFO  # logging levels are type int.
 
 
 class Settings(BaseSettings):
     """
     Main settings configuration for the application.
-    
+
     Attributes:
         API_V1_STR (str): The API version string.
         logging (LoggingSettings): Logging configuration settings.
         BACKEND_CORS_ORIGINS (List[AnyHttpUrl]): List of allowed CORS origins.
         PROJECT_NAME (str): The name of the project.
     """
+
     API_V1_STR: str = "/api/v1"
 
     logging: LoggingSettings = LoggingSettings()
 
-    BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = [
+    AnyHttpUrlList = List[Union[str, AnyHttpUrl]]
+
+    BACKEND_CORS_ORIGINS: AnyHttpUrlList = [
         "http://localhost:3000",
         "http://localhost:8000",
         "https://localhost:3000",
@@ -58,24 +62,26 @@ class Settings(BaseSettings):
     class Config:
         """
         Pydantic configuration for settings class.
-        
+
         Attributes:
             case_sensitive (bool): Enable case sensitivity for environment variables.
         """
+
         case_sensitive = True
 
 
 class InterceptHandler(logging.Handler):
     """
     Custom logging handler to integrate with Loguru.
-    
+
     Methods:
         emit(record: logging.LogRecord): Emits a log record to Loguru.
     """
+
     def emit(self, record: logging.LogRecord) -> None:
         """
         Emit a log record to Loguru.
-        
+
         Args:
             record (logging.LogRecord): The log record to emit.
         """
@@ -100,9 +106,9 @@ class InterceptHandler(logging.Handler):
 def setup_app_logging(config: Settings) -> None:
     """
     Prepare custom logging for the application.
-    
+
     This function configures the logging system to use Loguru for enhanced logging capabilities.
-    
+
     Args:
         config (Settings): The application settings configuration.
     """

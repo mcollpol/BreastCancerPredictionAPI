@@ -18,8 +18,9 @@ class Health(BaseModel):
     Attributes:
         name (str): The name of the project.
         api_version (str): The version of the API.
-        model_version (str): The version of the model.
+        ml_model_version (str): The version of the model.
     """
+
     name: str
     api_version: str
-    model_version: str
+    ml_model_version: str

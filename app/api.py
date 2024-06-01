@@ -16,9 +16,9 @@ import numpy as np
 import pandas as pd
 from fastapi import APIRouter, HTTPException
 from fastapi.encoders import jsonable_encoder
-from loguru import logger
-from log_reg_model import __version__ as model_version
+from log_reg_model import __version__ as ml_model_version
 from log_reg_model.predict import make_prediction
+from loguru import logger
 
 from app import __version__, schemas
 from app.config import settings
@@ -36,14 +36,16 @@ def health() -> dict:
             and model version.
     """
     health_schemas = schemas.Health(
-        name=settings.PROJECT_NAME, api_version=__version__, model_version=model_version
+        name=settings.PROJECT_NAME,
+        api_version=__version__,
+        ml_model_version=ml_model_version,
     )
 
     return health_schemas.dict()
 
 
 @api_router.post("/predict", response_model=schemas.PredictionResults, status_code=200)
-async def predict(input_data: schemas.BreastCancerPredictDataInputs) -> Any:
+def predict(input_data: schemas.BreastCancerPredictDataInputs) -> Any:
     """
     Endpoint for making breast cancer predictions.
 
@@ -54,18 +56,15 @@ async def predict(input_data: schemas.BreastCancerPredictDataInputs) -> Any:
         Any: Results of the prediction including predictions, version information,
         and any errors encountered.
     """
-
     input_df = pd.DataFrame(jsonable_encoder(input_data.inputs))
 
     logger.info(f"Making prediction on inputs: {input_data.inputs}")
-    results = await make_prediction(input_data=input_df.replace({np.nan: None})) # This change
-                                                                                 # is for pydantic.
+    results = make_prediction(input_data=input_df.replace({np.nan: None}))
 
     if results["errors"] is not None:
         logger.warning(f"Prediction validation error: {results.get('errors')}")
-        raise HTTPException(status_code=400,
-                            detail=json.loads(results["errors"]))
+        raise HTTPException(status_code=400, detail=json.loads(results["errors"]))
 
     logger.info(f"Prediction results: {results.get('predictions')}")
-
+    logger.info(f"Predictions type: {type(results.get('predictions'))}")
     return results

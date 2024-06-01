@@ -9,8 +9,8 @@ Classes:
 """
 from typing import Any, List, Optional
 
-from pydantic import BaseModel
 from log_reg_model.processing.validation import DataInputSchema
+from pydantic import BaseModel
 
 
 class PredictionResults(BaseModel):
@@ -20,11 +20,12 @@ class PredictionResults(BaseModel):
     Attributes:
         errors (Optional[Any]): Any errors encountered during prediction.
         version (str): The version of the model used for prediction.
-        predictions (Optional[List[float]]): The predicted values.
+        predictions (Optional[List[int]]): The predicted values.
     """
+
     errors: Optional[Any]
     version: str
-    predictions: Optional[List[float]]
+    predictions: Optional[List[int]]
 
 
 class BreastCancerPredictDataInputs(BaseModel):
@@ -37,6 +38,7 @@ class BreastCancerPredictDataInputs(BaseModel):
     Config:
         schema_extra (dict): Extra schema information for documentation purposes.
     """
+
     inputs: List[DataInputSchema]
 
     class Config:
