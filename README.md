@@ -21,7 +21,7 @@ To run the app, use the following command:
 ```bash
 tox run -e run
 ```
-This command will use Uvicorn to start the app in hhtp//:localhost:8001 from where you can modify the values for the different parameters described in [Breast Cancer Prediction dataset](https://www.kaggle.com/datasets/uciml/breast-cancer-wisconsin-data), to predict the expected diagnosis. 
+This command will use Uvicorn to start the app in http//:localhost:8001 from where you can modify the values for the different parameters described in [Breast Cancer Prediction dataset](https://www.kaggle.com/datasets/uciml/breast-cancer-wisconsin-data), to predict the expected diagnosis. 
 
 Predictions:
 - 0 -> Benign
